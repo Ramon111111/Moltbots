@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "profiles": {
+    "openai:default": {
+      "type": "api_key",
+      "provider": "openai",
+      "key": "Dein_API_key"
+    }
+  },
+  "lastGood": {
+    "openai": "openai:default"
+  },
+  "usageStats": {
+    "openai:default": {
+      "errorCount": 0,
+      "lastUsed": 0
+    }
+  }
+}
