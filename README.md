@@ -1,68 +1,88 @@
 # Masterprojekt: Autonome Agenten-Interaktion auf Moltbook
 
-Dieses Forschungsprojekt untersucht das Interaktionsverhalten autonomer KI-Agenten auf der Social-Media-Plattform Moltbook. Es werden zwei Agenten-Profile verglichen: **Moltbot-Good** (pro-sozial) und **Moltbot-Neutral** (wertfrei).
+Dieses Forschungsprojekt untersucht das Interaktionsverhalten autonomer KI-Agenten auf der Social-Media-Plattform Moltbook. Das Experiment folgt einem **sequentiellen Design**: Ein Agent wird nacheinander in zwei verschiedenen Persönlichkeitsprofilen (Phasen) betrieben.
 
 ---
 
 ## 0. ZWINGENDE VORAUSSETZUNG: OpenClaw Framework
 
-Dieses Projekt ist kein eigenständiges Programm, sondern eine Erweiterung für das **OpenClaw Framework**. Bevor du startest, muss OpenClaw auf deinem Betriebssystem installiert sein.
+Dieses Projekt ist eine Erweiterung für das **OpenClaw Framework**.
 
 1.  **Installation:** Das Framework muss global installiert sein (i.d.R. via npm: `npm install -g @openclaw/gateway`).
-2.  **Verifizierung:** Öffne dein Terminal (PowerShell/CMD) und tippe:
+2.  **Verifizierung:** Öffne dein Terminal und tippe:
     ```bash
     openclaw --version
     ```
-    Erhältst du eine Fehlermeldung ("Befehl nicht gefunden"), ist das Framework nicht installiert. Ohne die globale Installation können die Agenten in diesem Repository nicht gestartet werden.
+    *Erforderliche Version für dieses Projekt: >= 2026.4.12*
 
 ---
 
-## 1. API-Logik (Wissenschaftliches Design)
+## 1. Verzeichnisstruktur
 
-Um die methodische Sauberkeit des Experiments zu gewährleisten, nutzen wir folgendes Setup:
+Das Projekt ist lokal unter `C:\Master Projekt\Moltbots\` wie folgt strukturiert:
+
+* `\moltbot\`: Der aktive Arbeitsordner des Agenten (hier greift OpenClaw zu).
+* `\souls\`: Archiv für die Persönlichkeitsprofile (`soul_good.md`, `soul_neutral.md`).
+* `\templates\`: Vorlagen für Konfigurationsdateien.
+
+---
+
+## 2. API-Logik & Wissenschaftliches Design
+
+Um Variablen zu kontrollieren, nutzen wir ein **Single-Agent-Setup** mit manuellem Phasenwechsel.
 
 ### A. Gemeinsames "Gehirn" (OpenAI API)
-- **Status:** Identischer Key für beide Bots.
-- **Grund:** Beide Bots nutzen dieselbe Rechenpower (GPT-Modell). Da sie unterschiedliche Anweisungen (`soul.md`) haben, beeinflusst der gemeinsame Key nicht ihr unterschiedliches Verhalten.
+- Beide Phasen nutzen das identische Modell (GPT-Modell via OpenAI).
+- Die Verhaltensänderung wird ausschließlich durch den Austausch der `soul.md` gesteuert.
 
-### B. Getrennte "Identität" (Moltbook Credentials)
-- **Status:** Zwingend unterschiedliche Keys/Accounts.
-- **Grund:** Jeder Bot muss als eigenständiges Individuum auf der Plattform auftreten. Würden sie denselben Key nutzen, würden sie unter demselben Namen posten, was einen Vergleich unmöglich machen würde.
-
----
-
-## 2. Lokale Einrichtung
-
-### Schritt 1: Repository klonen
-Klone diesen Ordner in dein lokales Verzeichnis: `C:\Moltbots\`.
-
-### Schritt 2: Keys einfügen (Templates nutzen)
-Kopiere die Vorlagen aus dem Ordner `/templates` in die jeweiligen Bot-Ordner (`/moltbot-good` und `/moltbot-neutral`):
-
-1.  **auth-profiles.json**: Erstelle diese Datei aus der Vorlage und füge deinen **OpenAI-Key** ein.
-2.  **moltbook-credentials.json**: Erstelle diese Datei aus der Vorlage und füge die **spezifischen Moltbook-Daten** (Key, ID, Name) des jeweiligen Accounts ein.
+### B. "Identität" (Moltbook Credentials)
+- Jede Phase nutzt einen eigenen Moltbook-Account, um die Datenströme auf der Plattform sauber zu trennen. Die Zugangsdaten liegen in `\moltbot\moltbook-credentials.json`.
 
 ---
 
 ## 3. System-Integration (openclaw.json)
 
-Damit das installierte OpenClaw-Framework weiß, wo deine Masterarbeit-Agenten liegen, musst du sie in der **globalen Konfiguration** anmelden:
-
-1.  Öffne die Datei: `C:\Users\DEIN_NAME\.openclaw\openclaw.json`
-2.  Füge die Pfade zu den beiden Ordnern in die `list` ein:
+Registriere den Experiment-Agenten in deiner globalen OpenClaw-Konfiguration (`C:\Users\DEIN_NAME\.openclaw\openclaw.json`):
 
 ```json
-"list": [
-  {
-    "id": "moltbot-good",
-    "name": "Moltbot-Good",
-    "workspace": "C:\\\\Moltbots\\\\moltbot-good",
-    "agentDir": "C:\\\\Moltboots\\\\moltbot-good"
-  },
-  {
-    "id": "moltbot-neutral",
-    "name": "Moltbot-Neutral",
-    "workspace": "C:\\\\Moltbots\\\\moltbot-neutral",
-    "agentDir": "C:\\\\Moltbots\\\\moltbot-neutral"
+{
+  "agents": {
+    "list": [
+      {
+        "id": "moltbot",
+        "name": "Moltbot-Experiment",
+        "workspace": "C:\\Master Projekt\\Moltbots\\moltbot",
+        "agentDir": "C:\\Master Projekt\\Moltbots\\moltbot"
+      }
+    ]
   }
-]
+}
+
+
+## 4. Durchführung des Phasenwechsels (Reset-Protokoll)
+Beim Wechsel von Phase 1 (Good) zu Phase 2 (Neutral) muss dieses Protokoll strikt befolgt werden, um "Daten-Leckagen" zu verhindern:
+
+Schritt 1: System-Stopp
+Beende das Gateway im Terminal (Strg + C oder taskkill /F /IM node.exe).
+
+Schritt 2: Lokale Datenreinigung (Agenten-Ebene)
+Lösche alle Dateien im Ordner \Moltbots\moltbot\sessions\.
+
+Lösche alle tmp_-Dateien im Ordner \Moltbots\moltbot\.
+
+Schritt 3: Globaler Reset (System-Ebene)
+Lösche (oder sichere extern) die Inhalte folgender Ordner unter C:\Users\DEIN_NAME\.openclaw\:
+
+\memory\ (Löscht das Vektor-Langzeitgedächtnis).
+
+\logs\ (Startet eine frische Protokollierung für Phase 2).
+
+\completions\ (Leert den KI-Antwort-Cache).
+
+Schritt 4: Profil-Update
+Kopiere den Inhalt von \souls\soul_neutral.md in die aktive \moltbot\soul.md.
+
+Aktualisiere die \moltbot\moltbook-credentials.json mit den Daten des neutralen Accounts.
+
+Schritt 5: Neustart
+Starte das Gateway neu: openclaw gateway.

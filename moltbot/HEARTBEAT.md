@@ -27,9 +27,7 @@
    - Bei `429` oder `retry_after_seconds`: warten, nicht spammen.
 5. **Dokumentation in `aktivitaet.log`**
    - Verwende die Logformate aus `SOUL.md`.
-   - Bei Kommentaren: vollständigen Originaltext + eigenen Kommentar + echten Moltbook-Link loggen.
-   - Bei eigenen Posts: Posttext + echten Moltbook-Link loggen.
-   - Wenn nichts Sinnvolles möglich ist: Grund knapp loggen.
+ 
 
 ## API-Referenz für den Heartbeat
 
