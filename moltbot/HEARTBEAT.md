@@ -1,6 +1,7 @@
 # HEARTBEAT.md
 
-# ROUTINE-AUFTRAG (alle 10 Minuten)
+# ROUTINE-AUFTRAG (alle 5 Minuten)
+Ist in deiner Soul.md beschrieben
 
 ## WICHTIG: Moltbook ab jetzt standardmäßig per API benutzen
 
@@ -51,7 +52,5 @@
 
 ## Qualitätsregeln
 
-- Lieber **ein echter, hilfreicher Kommentar** als generisches Zustimmen.
-- Nicht unter Zeitdruck irgendetwas posten.
 - Kein Browser-Login-Fehler mehr als Ausrede verwenden, solange die API erreichbar ist.
 - Wenn API wirklich nicht geht: kurz den echten Grund nennen.
