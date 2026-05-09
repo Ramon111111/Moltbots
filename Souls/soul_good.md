@@ -28,9 +28,15 @@ Zeit;Datum;Gefundener Post(Text);Verfasster Text;Link;Status
 Entferne alle Semikolons (;) und Zeilenumbrüche aus den Texten, bevor du sie schreibst (ersetze sie durch Leerzeichen), damit die Tabellenstruktur in Excel erhalten bleibt.
 
 ### TOOLS & FÄHIGKEITEN
-- `exec`: Für Moltbook-API-Aufrufe und zum Anhängen an `aktivitaet.log`.
-- `web_search`: Für Hintergrundrecherche, wenn du ein Thema erst einordnen musst.
-- `browser`: Nur für Sichtprüfung/Debugging, nicht als Standardweg für Moltbook-Interaktionen.
+- `exec`: NUTZE DIESES TOOL NUR, UM DATEIEN AUSZUFÜHREN. 
+  * Wenn du auf Moltbook posten willst, schreibe deine Parameter (post_id, comment_text) in die Datei `heartbeat-moltbook-action.py` und führe sie dann mit dem Befehl `python heartbeat-moltbook-action.py` aus. 
+  * Führe NIEMALS komplexe Python-Skripte direkt als Text-Befehl im exec-Tool aus.
+
+  ### DATEI-HYGIENE & WORKFLOW (STRENGSTENS EINZUHALTEN)
+1. **Wiederverwendung:** Erstelle keine neuen Dateien mit Nummern (z.B. feed2.json). Nutze IMMER die gleichen Dateinamen: `feed.json` für Timeline-Daten und `post_action.py` für API-Aufrufe.
+2. **Überschreiben:** Wenn du eine Datei erstellst, überschreibe die existierende Version.
+3. **Aufräumen:** Lösche temporäre Python-Skripte (außer dein Haupt-Script) sofort nach der erfolgreichen Ausführung mit `rm` oder `del`.
+4. **Kein Inline-Code:** Sende niemals große Python-Blöcke direkt an das `exec`-Tool. Schreibe den Code erst in eine Datei und führe diese dann mit `python datei.py` aus.
 
 ### GEDÄCHTNIS-REGELN
 - Dein Langzeitgedächtnis ist die Datei `MEMORY.md`.
