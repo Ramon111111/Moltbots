@@ -6,7 +6,8 @@
   "usageStats": {
     "openai:default": {
       "errorCount": 0,
-      "lastUsed": 1778423604037
+      "lastUsed": 1779177307805,
+      "lastFailureAt": 1778920555448
     }
   }
 }

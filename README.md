@@ -8,8 +8,8 @@ Dieses Forschungsprojekt untersucht das Interaktionsverhalten autonomer KI-Agent
 
 Dieses Projekt ist eine Erweiterung für das **OpenClaw Framework**.
 
-1.  **Installation:** Das Framework muss global installiert sein (i.d.R. via npm: `npm install -g @openclaw/gateway`).
-2.  **Verifizierung:** Öffne dein Terminal und tippe:
+1. **Installation:** Das Framework muss global installiert sein (i.d.R. via npm: `npm install -g @openclaw/gateway`).
+2. **Verifizierung:** Öffne dein Terminal und tippe:
     ```bash
     openclaw --version
     ```
@@ -42,7 +42,7 @@ Um Variablen zu kontrollieren, nutzen wir ein **Single-Agent-Setup** mit manuell
 
 ## 3. System-Integration (openclaw.json)
 
-Registriere den Experiment-Agenten in deiner globalen OpenClaw-Konfiguration (`C:\Users\DEIN_NAME\.openclaw\openclaw.json`):
+Registriere den Experiment-Agenten in deiner globalen OpenClaw-Konfiguration (`C:\Users\DEIN_NAME\.openclaw\openclaw.json`). Der Heartbeat-Takt ist auf 5 Minuten festgelegt:
 
 ```json
 {
@@ -52,37 +52,45 @@ Registriere den Experiment-Agenten in deiner globalen OpenClaw-Konfiguration (`C
         "id": "moltbot",
         "name": "Moltbot-Experiment",
         "workspace": "C:\\Master Projekt\\Moltbots\\moltbot",
-        "agentDir": "C:\\Master Projekt\\Moltbots\\moltbot"
+        "agentDir": "C:\\Master Projekt\\Moltbots\\moltbot",
+        "heartbeat": {
+          "every": "5m",
+          "prompt": "Prüfe Moltbook gemäß deiner HEARTBEAT.md. Kommentiere einen Post oder verfasse einen eigenen. Protokolliere die Aktion UNBEDINGT als neue Zeile in aktivitaet.log im CSV-Format (Zeit;Datum;Gefundener Post;Verfasster Text;Link;Status)!"
+        }
       }
     ]
   }
 }
 
-
 ## 4. Durchführung des Phasenwechsels (Reset-Protokoll)
-Beim Wechsel von Phase 1 (Good) zu Phase 2 (Neutral) muss dieses Protokoll strikt befolgt werden, um "Daten-Leckagen" zu verhindern:
 
-Schritt 1: System-Stopp
-Beende das Gateway im Terminal (Strg + C oder taskkill /F /IM node.exe).
+Beim Wechsel von Phase 1 (Good) zu Phase 2 (Neutral) muss dieses Protokoll strikt befolgt werden, um "Daten-Leckagen" und einen Context Overflow zu verhindern:
 
-Schritt 2: Lokale Datenreinigung (Agenten-Ebene)
-Lösche alle Dateien im Ordner \Moltbots\moltbot\sessions\.
+### Schritt 1: System-Stopp
+Beende das Gateway im Terminal (`Strg + C` oder `taskkill /F /IM node.exe`).
 
-Lösche alle tmp_-Dateien im Ordner \Moltbots\moltbot\.
+### Schritt 2: Lokale Datenreinigung (Agenten-Ebene)
+Lösche im Projektverzeichnis `C:\Master Projekt\Moltbots\moltbot\` folgende temporäre Dateien, falls vorhanden:
+* `action.json`
+* `action_result.json`
+* `feed.json`
+* `post_action.py`
+* Alle Inhalte in den Ordnern `\memory\` und `\state\` (die Ordner selbst bleiben bestehen).
 
-Schritt 3: Globaler Reset (System-Ebene)
-Lösche (oder sichere extern) die Inhalte folgender Ordner unter C:\Users\DEIN_NAME\.openclaw\:
+### Schritt 3: Globaler Reset (System-Ebene)
+Lösche die Inhalte folgender Ordner unter `C:\Users\DEIN_NAME\.openclaw\`, um das Gedächtnis des Frameworks vollständig zurückzusetzen (Ordnerstrukturen nicht löschen):
+* `\agents\moltbot\sessions\` (Löscht die `.jsonl`-Sitzungsprotokolle; zwingend erforderlich gegen Context Overflow).
+* `\workspace-moltbot\` (Leert die gespiegelten Arbeitskopien).
+* `\memory\` (Löscht das Vektor-Langzeitgedächtnis).
+* `\completions\` (Leert den KI-Antwort-Cache).
+* `\logs\` (Startet eine frische System-Protokollierung).
 
-\memory\ (Löscht das Vektor-Langzeitgedächtnis).
+### Schritt 4: Profil-Update
+1. Kopiere den Inhalt von `\souls\soul_neutral.md` in die aktive `\moltbot\soul.md`.
+2. Aktualisiere die `\moltbot\moltbook-credentials.json` mit den Zugangsdaten des neutralen Accounts.
+3. Leere den Inhalt der `\moltbot\aktivitaet.log`, damit die Messung für Phase 2 bei Zeile 1 beginnt.
 
-\logs\ (Startet eine frische Protokollierung für Phase 2).
-
-\completions\ (Leert den KI-Antwort-Cache).
-
-Schritt 4: Profil-Update
-Kopiere den Inhalt von \souls\soul_neutral.md in die aktive \moltbot\soul.md.
-
-Aktualisiere die \moltbot\moltbook-credentials.json mit den Daten des neutralen Accounts.
-
-Schritt 5: Neustart
-Starte das Gateway neu: openclaw gateway.
+### Schritt 5: Neustart
+Starte das Gateway über die PowerShell neu:
+```bash
+openclaw gateway
