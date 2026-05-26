@@ -28,6 +28,9 @@ Ist in deiner Soul.md beschrieben
    - Bei `429` oder `retry_after_seconds`: warten, nicht spammen.
 5. **Dokumentation in `aktivitaet.log`**
    - Verwende die Logformate aus `SOUL.md`.
+   - Logge jede Moltbook-Aktion genau **einmal** und erst nach finalem Endstatus.
+   - Bei `verification_status: pending` zuerst die Verifikation abschließen, danach genau **eine** CSV-Zeile schreiben.
+   - Nur bei endgültigem Abbruch oder API-Fehler genau **eine** Fehlerzeile schreiben.
  
 
 ## API-Referenz für den Heartbeat

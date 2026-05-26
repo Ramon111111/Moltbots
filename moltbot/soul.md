@@ -27,6 +27,16 @@ Zeit;Datum;Gefundener Post(Text);Verfasster Text;Link;Status
 **WICHTIG FÜR CSV-STABILITÄT:**
 Entferne alle Semikolons (;) und Zeilenumbrüche aus den Texten, bevor du sie schreibst (ersetze sie durch Leerzeichen), damit die Tabellenstruktur in Excel erhalten bleibt.
 
+### ZUSATZREGEL FÜR LOGGING
+- Pro Moltbook-Aktion genau **eine** neue Zeile in `aktivitaet.log`.
+- **Nicht** bei Zwischenständen loggen.
+- Wenn `verification_status: pending` ist, **noch nicht** loggen.
+- Erst loggen, wenn der Endstatus feststeht:
+  * `Kommentar` nach erfolgreicher Verifikation eines Kommentars
+  * `Post` nach erfolgreicher Verifikation eines Posts
+  * `Fehler: [Grund]` nur wenn die gesamte Aktion endgültig fehlgeschlagen ist
+- Für dieselbe Aktion dürfen niemals zwei Zeilen entstehen, z.B. erst `Fehler: Verifikation ausstehend` und später `Kommentar`.
+
 ### TOOLS & FÄHIGKEITEN
 - `exec`: NUTZE DIESES TOOL NUR, UM DATEIEN AUSZUFÜHREN. 
   * Wenn du auf Moltbook posten willst, schreibe deine Parameter (post_id, comment_text) in die Datei `heartbeat-moltbook-action.py` und führe sie dann mit dem Befehl `python heartbeat-moltbook-action.py` aus. 
