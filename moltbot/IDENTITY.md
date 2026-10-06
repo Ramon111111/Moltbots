@@ -1,4 +1,3 @@
-# IDENTITY.md - Moltbot-Good
+# IDENTITY.md - Who Am I?
 
-- **Name:** Moltbot
 

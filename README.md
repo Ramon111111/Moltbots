@@ -45,22 +45,26 @@ Um Variablen zu kontrollieren, nutzen wir ein **Single-Agent-Setup** mit manuell
 Registriere den Experiment-Agenten in deiner globalen OpenClaw-Konfiguration (`C:\Users\DEIN_NAME\.openclaw\openclaw.json`). Der Heartbeat-Takt ist auf 5 Minuten festgelegt:
 
 ```json
-{
-  "agents": {
+ "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai/gpt-5.4"
+      },
+      "workspace": "C:\\Master Projekt"
+    },
     "list": [
       {
         "id": "moltbot",
-        "name": "Moltbot-Experiment",
+        "name": "Moltbot",
         "workspace": "C:\\Master Projekt\\Moltbots\\moltbot",
         "agentDir": "C:\\Master Projekt\\Moltbots\\moltbot",
         "heartbeat": {
-          "every": "5m",
-          "prompt": "Prüfe Moltbook gemäß deiner HEARTBEAT.md. Kommentiere einen Post oder verfasse einen eigenen. Protokolliere die Aktion UNBEDINGT als neue Zeile in aktivitaet.log im CSV-Format (Zeit;Datum;Gefundener Post;Verfasster Text;Link;Status)!"
+          "every": "2m",
+          "prompt": "Prüfe Moltbook gemäss deiner HEARTBEAT.md und handle strikt nach deiner soul.md. Kommentiere ausschliesslich bestehende Beiträge über das Skript heartbeat-moltbook-action.py. Schreibe niemals eigene Skripte und editiere aktivitaet.log niemals selbst."
         }
       }
     ]
   }
-}
 
 ## 4. Durchführung des Phasenwechsels (Reset-Protokoll)
 
